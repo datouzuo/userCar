@@ -2,6 +2,7 @@ package xin.mengzuo.user.car.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,8 +41,6 @@ public class CollectController {
 	 */
 	@RequestMapping("/addCollection")
 	public UsedCarResult addCollection(String carId, HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
-		
-	
 		String value = CookieUtils.getCookieValue(request, "tokenId");
 			String us = cluster.get("tokenId:"+value);
 			User usr = obJeson.readValue(us, User.class); // 从redis获得用户
