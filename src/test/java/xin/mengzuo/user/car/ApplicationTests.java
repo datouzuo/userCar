@@ -25,6 +25,7 @@ import io.searchbox.core.Index;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import io.searchbox.core.SearchResult.Hit;
+import io.searchbox.core.UpdateByQuery;
 import xin.mengzuo.user.car.config.UsedCarResult;
 import xin.mengzuo.user.car.pojo.EsUser;
 
@@ -64,6 +65,24 @@ public class ApplicationTests {
 			e.printStackTrace();
 		}
 	}
-	
-
+@Test	
+ public void updatetest() {
+	SearchSourceBuilder search = new SearchSourceBuilder();
+	 BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+	 queryBuilder.must(QueryBuilders.matchQuery("carId", "f2959f4f-5076-488c-827f-ef9bd557edeb"));
+	 search.query(queryBuilder);
+	 Search se = new Search.Builder(search.toString()).addIndex("car").addType("esuser").build();
+	 try {
+		SearchResult execute = jedis.execute(se);
+		Hit<EsUser,Void> firstHit = execute.getFirstHit(EsUser.class);
+		EsUser score = firstHit.source;
+		score.setIdCard("1234567");
+		Index in = new Index.Builder(score).index("car").type("esuser").build();
+		jedis.execute(in);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	 
+ }
 }

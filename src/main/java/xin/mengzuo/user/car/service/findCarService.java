@@ -12,5 +12,5 @@ import xin.mengzuo.user.car.pojo.EsUser;
 public interface findCarService {
 	
 	public UsedCarResult filtrCar(EsCar esCar,Integer page) throws IOException;
-	
+	public UsedCarResult findByCarId(String carId)  throws IOException;
 }

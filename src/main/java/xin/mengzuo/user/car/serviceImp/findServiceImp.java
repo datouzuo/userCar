@@ -1,6 +1,7 @@
 package xin.mengzuo.user.car.serviceImp;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,12 +19,14 @@ import io.searchbox.core.SearchResult;
 import io.searchbox.core.SearchResult.Hit;
 import xin.mengzuo.user.car.config.UsedCarResult;
 import xin.mengzuo.user.car.pojo.EsCar;
+import xin.mengzuo.user.car.pojo.EsCarToEsMoreCar;
 import xin.mengzuo.user.car.pojo.EsMoreCar;
 import xin.mengzuo.user.car.pojo.EsUser;
 import xin.mengzuo.user.car.pojo.EsUserToEsCar;
+import xin.mengzuo.user.car.pojo.UserOrderTOEsCar;
 import xin.mengzuo.user.car.service.findCarService;
 @Service
-public class AddServiceImp implements findCarService {
+public class findServiceImp implements findCarService {
     @Autowired
 	private JestClient jest;
 
@@ -74,12 +77,13 @@ public class AddServiceImp implements findCarService {
 		 if(esCar.getGearbox()!=null) {
 			 query.must(QueryBuilders.matchQuery("gearbox",esCar.getGearbox()));
 		 }
-		 search.from((page-1)*12);
+		search.from((page-1)*12);
 		search.size(12);
-		Search se = new Search.Builder(search.toString()).addIndex("car").addType("escar").build();
+		search.query(query);
+		Search se = new Search.Builder(search.toString()).addIndex("escar").addType("escar").build();
 		SearchResult execute = jest.execute(se);
 		List<Hit<EsCar,Void>> hits = execute.getHits(EsCar.class);
-		List<EsCar> list = null;
+		List<EsCar> list = new LinkedList<EsCar>();
 		for(Hit<EsCar,Void> hit : hits) {
 			EsCar source = hit.source;
 			list.add(source);
@@ -87,6 +91,32 @@ public class AddServiceImp implements findCarService {
 		return UsedCarResult.ok(list);
 	}
 
+	@Override
+	public UsedCarResult findByCarId(String carId) throws IOException {
+		
+		
+		SearchSourceBuilder search = new SearchSourceBuilder();
+		 BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+		 queryBuilder.must(QueryBuilders.matchQuery("carId",carId));
+		 search.query(queryBuilder);
+		 Search se = new Search.Builder(search.toString()).addIndex("escar").addType("escar").build();
+		 SearchResult execute = jest.execute(se);
+		 Hit<EsCar,Void> firstHit = execute.getFirstHit(EsCar.class); 
+		 EsCar source = firstHit.source;
+		 
+		 Search se1 = new Search.Builder(search.toString()).addIndex("esmorecar").addType("esmorecar").build();
+		 SearchResult execute1 = jest.execute(se1);
+		 
+		 Hit<EsMoreCar, Void> firstHit1 = execute1.getFirstHit(EsMoreCar.class); 
+		 EsMoreCar source1 = firstHit1.source;
+		 
+		 EsCarToEsMoreCar es = new EsCarToEsMoreCar();
+		 es.setEsCar(source);
+		 es.setEsMoreCar(source1);		 
+        	return UsedCarResult.ok(es);
+		
 
+
+	}
 
 }

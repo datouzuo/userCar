@@ -19,7 +19,14 @@ import xin.mengzuo.user.car.service.findCarService;
 @RequestMapping("/es")
 public class findCarController {
 	@Autowired
-	private findCarService addcar;
+	private findCarService fincar;
+	@RequestMapping("/filtrCar")
+	public UsedCarResult filtrCar(EsCar esCar,Integer page) throws IOException{
+		return fincar.filtrCar(esCar, page);
+	}
+	@RequestMapping("/findByCarId")
+	public UsedCarResult findByCarId(String carId)  throws IOException{
   
-
+      return fincar.findByCarId(carId);
+	}
 }
