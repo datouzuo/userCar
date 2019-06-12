@@ -42,8 +42,8 @@ public class CollectController {
 	@RequestMapping("/addCollection")
 	public UsedCarResult addCollection(String carId, HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
 		String value = CookieUtils.getCookieValue(request, "tokenId");
-			String us = cluster.get("tokenId:"+value);
-			User usr = obJeson.readValue(us, User.class); // 从redis获得用户
+		String us = cluster.get("tokenId:"+value);
+		User usr = obJeson.readValue(us, User.class); // 从redis获得用户
 		Collection col = new Collection();
 		col.setCarId(carId);
 		col.setUserId(usr.getUserid());
@@ -55,7 +55,7 @@ public class CollectController {
  * @return
  */
 	@RequestMapping("/deleteCollection")
-		public UsedCarResult deleteCollection(String id) {
+		public UsedCarResult deleteCollection(Integer id) {
 	          
 			return cs.deleteCollection(id);
 		}

@@ -9,6 +9,7 @@ public class Collection {
 	@Id
  	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	
 	private String carId;
 	private Integer userId;
 	public Integer getId() {

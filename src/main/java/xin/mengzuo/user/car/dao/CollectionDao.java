@@ -8,7 +8,7 @@ import xin.mengzuo.user.car.pojo.Collection;
 
 
 
-public interface CollectionDao extends JpaRepository<Collection, String>{
+public interface CollectionDao extends JpaRepository<Collection, Integer>{
 
-	List<Collection> findByuserId(Integer userId);
+	List<Collection> findByUserId(Integer userId);
 }

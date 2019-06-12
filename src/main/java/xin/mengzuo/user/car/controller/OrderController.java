@@ -19,7 +19,7 @@ import redis.clients.jedis.JedisCluster;
 import xin.mengzuo.user.car.config.ApplStuts;
 import xin.mengzuo.user.car.config.CookieUtils;
 import xin.mengzuo.user.car.config.UsedCarResult;
-import xin.mengzuo.user.car.pojo.Order;
+import xin.mengzuo.user.car.pojo.Userorder;
 import xin.mengzuo.user.car.pojo.User;
 import xin.mengzuo.user.car.service.OrderService;
 
@@ -44,7 +44,7 @@ public class OrderController {
 	 * @throws IOException
 	 */
 	@RequestMapping("/addOrder")
-	public UsedCarResult addOrder(Order order, HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
+	public UsedCarResult addOrder(Userorder order, HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
 
 		TimeZone zone = TimeZone.getTimeZone("Asia/Shanghai");
 		Calendar cal = Calendar.getInstance(zone);
@@ -56,6 +56,7 @@ public class OrderController {
 		String us = cluster.get("tokenId:"+value);
 		User usr = obJeson.readValue(us, User.class);
 		order.setUserId(usr.getUserid()); 
+//	    order.setUserId(1);
 		
 		order.setStatus(ApplStuts.NO_APPIY);
 		
@@ -81,9 +82,9 @@ public class OrderController {
  */
 	@RequestMapping("/findByUserId")
 	public UsedCarResult findByUserId(HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
-		  String value = CookieUtils.getCookieValue(request, "tokenId");
-			String us = cluster.get("tokenId:"+value);
-			User usr = obJeson.readValue(us, User.class);
-		return oService.findByUserId(usr.getUserid());
+//		  String value = CookieUtils.getCookieValue(request, "tokenId");
+//			String us = cluster.get("tokenId:"+value);
+//			User usr = obJeson.readValue(us, User.class);
+		return oService.findByUserId(1);
 	}
 }
