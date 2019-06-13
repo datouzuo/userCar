@@ -22,11 +22,7 @@ public class MvcConfigurer  implements WebMvcConfigurer{
 		WebMvcConfigurer.super.addCorsMappings(registry);
 	}
 
-	@Override
-	public void addFormatters(FormatterRegistry registry) {
-	registry.addFormatter(new DateFormatter("yyyy-MM-dd"));
-		WebMvcConfigurer.super.addFormatters(registry);
-	}
+
 
   
 }
