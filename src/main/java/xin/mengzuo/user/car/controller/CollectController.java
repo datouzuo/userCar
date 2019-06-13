@@ -67,9 +67,8 @@ public class CollectController {
  * @throws JsonParseException 
  */
 	@RequestMapping("/findCollection")
-		public UsedCarResult findByUserId(HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
-		String value = CookieUtils.getCookieValue(request, "tokenId");
-		String us = cluster.get("tokenId:"+value);
+		public UsedCarResult findByUserId(String tokenId) throws JsonParseException, JsonMappingException, IOException {
+		String us = cluster.get("tokenId:"+tokenId);
 		User usr = obJeson.readValue(us, User.class); // 从redis获得用户
 
 			return cs.findByUserId(usr.getUserid());
