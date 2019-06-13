@@ -40,9 +40,8 @@ public class CollectController {
 	 * @throws JsonParseException 
 	 */
 	@RequestMapping("/addCollection")
-	public UsedCarResult addCollection(String carId, HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
-		String value = CookieUtils.getCookieValue(request, "tokenId");
-		String us = cluster.get("tokenId:"+value);
+	public UsedCarResult addCollection(String carId,String tokenId, HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
+		String us = cluster.get("tokenId:"+tokenId);
 		User usr = obJeson.readValue(us, User.class); // 从redis获得用户
 		Collection col = new Collection();
 		col.setCarId(carId);

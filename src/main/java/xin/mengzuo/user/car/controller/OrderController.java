@@ -44,19 +44,16 @@ public class OrderController {
 	 * @throws IOException
 	 */
 	@RequestMapping("/addOrder")
-	public UsedCarResult addOrder(Userorder order, HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
+	public UsedCarResult addOrder(Userorder order, String tokenId, HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
 
 		TimeZone zone = TimeZone.getTimeZone("Asia/Shanghai");
 		Calendar cal = Calendar.getInstance(zone);
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 	    order.setCreatedAt(sim.format(cal.getTime()));// 获得东八区时间
-     	
-	    String value = CookieUtils.getCookieValue(request, "tokenId");
-		String us = cluster.get("tokenId:"+value);
+		String us = cluster.get("tokenId:"+tokenId);
 		User usr = obJeson.readValue(us, User.class);
 		order.setUserId(usr.getUserid()); 
-//	    order.setUserId(1);
 		
 		order.setStatus(ApplStuts.NO_APPIY);
 		
@@ -81,10 +78,9 @@ public class OrderController {
  * @throws IOException
  */
 	@RequestMapping("/findByUserId")
-	public UsedCarResult findByUserId(HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
-//		  String value = CookieUtils.getCookieValue(request, "tokenId");
-//			String us = cluster.get("tokenId:"+value);
-//			User usr = obJeson.readValue(us, User.class);
+	public UsedCarResult findByUserId(String tokenId) throws JsonParseException, JsonMappingException, IOException {
+		String us = cluster.get("tokenId:"+tokenId);
+			User usr = obJeson.readValue(us, User.class);
 		return oService.findByUserId(1);
 	}
 }

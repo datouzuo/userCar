@@ -18,6 +18,10 @@ import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Jedis;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.searchbox.action.Action;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.DocumentResult;
@@ -25,15 +29,23 @@ import io.searchbox.core.Index;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import io.searchbox.core.SearchResult.Hit;
+import redis.clients.jedis.JedisCluster;
 import io.searchbox.core.UpdateByQuery;
 import xin.mengzuo.user.car.config.UsedCarResult;
 import xin.mengzuo.user.car.pojo.EsUser;
+import xin.mengzuo.user.car.pojo.User;
+import xin.mengzuo.user.car.service.SellCarService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ApplicationTests {
 	@Autowired
 	private JestClient jedis;
+	@Autowired
+	private ObjectMapper obJeson;
+	
+	@Autowired
+	private JedisCluster cluster;
 	@Test
 	public void contextLoads() throws IOException {
 		
@@ -85,4 +97,10 @@ public class ApplicationTests {
 	}
 	 
  }
+@Test
+public void updateredis() throws JsonParseException, JsonMappingException, IOException {
+	String us = cluster.get("tokenId:421d1115-9655-4617-a102-d3c7ff256ea7");
+	User usr = obJeson.readValue(us, User.class);
+	System.out.println(usr.getEmail());
+}
 }

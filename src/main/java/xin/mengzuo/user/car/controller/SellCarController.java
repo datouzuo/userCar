@@ -38,20 +38,17 @@ public class SellCarController {
 	private ObjectMapper obJeson;
 	
 	@RequestMapping("/applySellCar")
-	public UsedCarResult applySellCar(Car car, HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
+	public UsedCarResult applySellCar(Car car,String tokenId, HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
 		
 		TimeZone zone = TimeZone.getTimeZone("Asia/Shanghai");
 		Calendar cal = Calendar.getInstance(zone);
 		SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		car.setCreatedAt(sim.format(cal.getTime()));// 获得东八区时间
-	String value = CookieUtils.getCookieValue(request, "tokenId");
-		String us = cluster.get("tokenId:"+value);
+		String us = cluster.get("tokenId:"+tokenId);
 		User usr = obJeson.readValue(us, User.class);
-	
-	 car.setUserId(usr.getUserid());// 设置用户Id
-	
-		 car.setStatus(ApplStuts.NO_APPIY); //设置订单状态未处理
+	    car.setUserId(usr.getUserid());// 设置用户Id
+		car.setStatus(ApplStuts.NO_APPIY); //设置订单状态未处理
 		
 		return scs.applySellCar(car);
 	}
@@ -71,12 +68,10 @@ public class SellCarController {
 	 * @throws JsonParseException 
 	 */
 	@RequestMapping("/findApplyBYuserId")
-	public UsedCarResult findAllApply(HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
-		String value = CookieUtils.getCookieValue(request, "tokenId");
-		String us = cluster.get("tokenId:"+value);
+	public UsedCarResult findAllApply(HttpServletRequest request, String tokenId) throws JsonParseException, JsonMappingException, IOException {
+		String us = cluster.get("tokenId:"+tokenId);
 		User usr = obJeson.readValue(us, User.class);
 
-	
 		return scs.findAllApply(usr.getUserid());
 	}
 }
