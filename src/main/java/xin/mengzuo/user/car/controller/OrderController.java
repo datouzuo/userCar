@@ -81,6 +81,6 @@ public class OrderController {
 	public UsedCarResult findByUserId(String tokenId) throws JsonParseException, JsonMappingException, IOException {
 		String us = cluster.get("tokenId:"+tokenId);
 			User usr = obJeson.readValue(us, User.class);
-		return oService.findByUserId(1);
+		return oService.findByUserId(usr.getUserid());
 	}
 }

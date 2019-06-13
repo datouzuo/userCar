@@ -33,7 +33,8 @@ public class SessionInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		String value = CookieUtils.getCookieValue(request, "tokenId");
+		String tokenId = request.getParameter("tokenId");
+		String value = cluster.get("tokenId:"+tokenId);
 		if(value!=null&&value.equals("")) {
 			cluster.expire("tokenId:"+value, 1800);
 			return true;
